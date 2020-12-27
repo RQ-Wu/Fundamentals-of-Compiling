@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <algorithm>
 
@@ -18,28 +19,33 @@ typedef struct nfaState{
 vector<nfaState> nfaInit(){
     vector<nfaState> nfa;
     string s;
-    while (getline(cin, s, '\n')){
-        STATE headState, tailState, processingState;
-        int length = s.length();
-        int scaner = 0;
-        headState = s[scaner];
-        length -= 2;
-        scaner += 2;
-        while (length > 0){
-            nfaState temp;
-            tailState = s[scaner + 5];
-            processingState = s[scaner + 2];
+    ifstream fin(R"(F:\nfa2dfa\connect\nfa.txt)");
+    if (fin.is_open()){
+        while (!fin.eof()){
+            getline(fin, s);
+            STATE headState, tailState, processingState;
+            int length = s.length();
+            int scaner = 0;
+            headState = s[scaner];
+            length -= 2;
+            scaner += 2;
+            while (length > 0){
+                nfaState temp;
+                tailState = s[scaner + 5];
+                processingState = s[scaner + 2];
 
-            temp.headState = headState;
-            temp.processingValue = processingState;
-            temp.tailState = tailState;
+                temp.headState = headState;
+                temp.processingValue = processingState;
+                temp.tailState = tailState;
 
-            nfa.push_back(temp);
+                nfa.push_back(temp);
 
-            length -= 7;
-            scaner += 7;
+                length -= 7;
+                scaner += 7;
+            }
         }
     }
+
     return nfa;
 }
 
@@ -113,21 +119,21 @@ CLUSTER joinCluster(vector<CLUSTER> epsilonClusters, CLUSTER clusterMove){
         if (s == 'X')
             joinRes.insert(
                     joinRes.end(),
-                   epsilonClusters[epsilonClusters.size() - 2].begin(),
-                   epsilonClusters[epsilonClusters.size() - 2].end()
-                   );
+                    epsilonClusters[epsilonClusters.size() - 2].begin(),
+                    epsilonClusters[epsilonClusters.size() - 2].end()
+            );
         else if (s == 'Y')
             joinRes.insert(
                     joinRes.end(),
                     epsilonClusters[epsilonClusters.size() - 1].begin(),
                     epsilonClusters[epsilonClusters.size() - 1].end()
-                    );
+            );
         else
             joinRes.insert(
                     joinRes.end(),
                     epsilonClusters[s - '0'].begin(),
                     epsilonClusters[s - '0'].end()
-                    );
+            );
     }
     sort(joinRes.begin(),joinRes.end());
     joinRes.erase(unique(joinRes.begin(),joinRes.end()),joinRes.end());
@@ -152,28 +158,29 @@ vector<dfaState> renameDFA(vector<dfaState> dfa, STATE start, STATE terminate){
 
 //output dfa with specific format
 void outputDFA(vector<dfaState> dfa, int stateNum){
+    ofstream fout(R"(F:\\nfa2dfa\\connect\\dfa.txt)");
     // output start state first
-    cout << "X";
+    fout << "X";
     for (dfaState &d : dfa){
         if (d.headState == 'X')
-            cout << " " << d.headState << "-" << d.processingValue << "->" << d.tailState;
+            fout << " " << d.headState << "-" << d.processingValue << "->" << d.tailState;
     }
-    cout << "\n";
+    fout << "\n";
     // output terminate state then
-    cout << "Y";
+    fout << "Y";
     for (dfaState &d : dfa){
         if (d.headState == 'Y')
-            cout << " " << d.headState << "-" << d.processingValue << "->" << d.tailState;
+            fout << " " << d.headState << "-" << d.processingValue << "->" << d.tailState;
     }
-    cout << "\n";
+    fout << "\n";
     // output other state
     for (int i = 0; i < stateNum; ++i) {
-        cout << i;
+        fout << i;
         for (dfaState &d : dfa){
             if (d.headState == '0' + i)
-                cout << " " << d.headState << "-" << d.processingValue << "->" << d.tailState;
+                fout << " " << d.headState << "-" << d.processingValue << "->" << d.tailState;
         }
-        cout << "\n";
+        fout << "\n";
     }
 }
 void NFA2DFA(){
@@ -214,7 +221,7 @@ void NFA2DFA(){
                 int position = distance(
                         newCluster.begin(),
                         find(newCluster.begin(), newCluster.end(), clusterTemp)
-                        );
+                );
                 dfaState dfaTemp;
                 dfaTemp.headState = '0' + i;
                 dfaTemp.processingValue = v;
