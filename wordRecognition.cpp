@@ -334,8 +334,8 @@ bool analysis(char *in_file, char *out_file) {  //  分析
 }
 
 int main() {
-    char input[13] = "testfile.txt";
-    char output[11] = "output.txt";
+    char input[13] = "/connect/testfile.txt";
+    char output[11] = "/connect/output.txt";
     bool result = analysis(input, output);
     return result;
 }
