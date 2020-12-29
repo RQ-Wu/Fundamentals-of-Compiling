@@ -7,4 +7,4 @@
 4. Word recognition via DFA   ----Bing Zhu
 
 **How to start the project**
-- run 'main.cpp'
+- run `main.cpp`
