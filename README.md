@@ -5,3 +5,6 @@
 2. NFA ==> DFA   ----by Ruiqi Wu
 3. DFA simplify   ----by Guang Wang
 4. Word recognition via DFA   ----Bing Zhu
+
+**How to start the project**
+- run 'main.cpp'
