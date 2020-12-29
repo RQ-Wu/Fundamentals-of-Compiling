@@ -19,10 +19,11 @@ typedef struct nfaState{
 vector<nfaState> nfaInit(){
     vector<nfaState> nfa;
     string s;
-    ifstream fin(R"(F:\nfa2dfa\connect\nfa.txt)");
+    ifstream fin(R"(F:\nfa2dfa\connect\temp.txt)");
     if (fin.is_open()){
         while (!fin.eof()){
             getline(fin, s);
+//            cout << s << endl;
             STATE headState, tailState, processingState;
             int length = s.length();
             int scaner = 0;
@@ -158,7 +159,7 @@ vector<dfaState> renameDFA(vector<dfaState> dfa, STATE start, STATE terminate){
 
 //output dfa with specific format
 void outputDFA(vector<dfaState> dfa, int stateNum){
-    ofstream fout(R"(F:\\nfa2dfa\\connect\\dfa.txt)");
+    ofstream fout(R"(F:\\nfa2dfa\\connect\\temp.txt)");
     // output start state first
     fout << "X";
     for (dfaState &d : dfa){
@@ -239,8 +240,4 @@ void NFA2DFA(){
     int stateNum = newCluster.size() - 2;
     outputDFA(dfa, stateNum);
 
-}
-int main(){
-    NFA2DFA();
-    return 0;
 }
